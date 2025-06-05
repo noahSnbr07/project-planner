@@ -1,0 +1,103 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  //base
+  id      String   @id @unique @default(uuid())
+  created DateTime @default(now())
+  updated DateTime @updatedAt
+
+  //props 
+  name      String
+  hash      String
+  workspace Workspace @relation(fields: [workspaceId], references: [id])
+
+  //relations 
+  workspaceId String
+}
+
+model Workspace {
+  //base
+  id      String   @id @unique @default(uuid())
+  created DateTime @default(now())
+  updated DateTime @updatedAt
+
+  //props 
+  name     String
+  projects Project[]
+
+  //relations 
+  User User[]
+}
+
+model Project {
+  //base
+  id      String   @id @unique @default(uuid())
+  created DateTime @default(now())
+  updated DateTime @updatedAt
+
+  //props
+  todo Todo @relation(fields: [todoId], references: [id])
+
+  //relations 
+  Workspace   Workspace? @relation(fields: [workspaceId], references: [id])
+  workspaceId String?
+  todoId      String
+}
+
+model Todo {
+  //base
+  id      String   @id @unique @default(uuid())
+  created DateTime @default(now())
+  updated DateTime @updatedAt
+
+  //props
+  entries TodoEntry[]
+
+  //relations 
+  Project Project[]
+}
+
+model TodoEntry {
+  //base
+  id      String   @id @unique @default(uuid())
+  created DateTime @default(now())
+  updated DateTime @updatedAt
+
+  //props 
+  name     String
+  tag      TodoEntryTag @relation(fields: [todoEntryTagId], references: [id])
+  deadline DateTime
+
+  //relations 
+  Todo           Todo?   @relation(fields: [todoId], references: [id])
+  todoId         String?
+  todoEntryTagId String
+}
+
+model TodoEntryTag {
+  //base
+  id      String   @id @unique @default(uuid())
+  created DateTime @default(now())
+  updated DateTime @updatedAt
+
+  //props 
+  name  String
+  color String
+
+  //relations 
+  TodoEntry TodoEntry[]
+  todoId    String?
+}
