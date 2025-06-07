@@ -48,10 +48,15 @@ export async function POST(_request: NextRequest): Promise<NextResponse<APIRespo
             status: 200,
         });
 
-        const { hash, ...safe } = target;
 
         //write jwt to cookies
-        const token = sign({ ...safe }, secret, { expiresIn: "24h" });
+        const token = sign({
+            id: target.id,
+            name: target.id,
+            suspended: target.id,
+            superuser: target.id,
+            workspaceId: target.id,
+        }, secret, { expiresIn: "24h" });
         cookieStore.set({
             name: "token",
             value: token,

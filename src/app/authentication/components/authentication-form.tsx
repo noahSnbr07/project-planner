@@ -56,8 +56,8 @@ export default function AuthenticationForm() {
         if (pending) return;
         setPending(true);
         const formData = new FormData();
-
-        for (const key in values) formData.append(key, (values as any)[key]);
+        formData.append("name", values.name);
+        formData.append("password", values.password);
 
         const options: RequestInit = { method: "POST", body: formData };
 
