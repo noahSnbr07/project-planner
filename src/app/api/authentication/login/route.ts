@@ -2,6 +2,8 @@ import APIResponse from '@/interfaces/api-response';
 import database from '@/lib/database';
 import { NextResponse, NextRequest } from 'next/server';
 import { compare } from 'bcrypt';
+import { sign } from "jsonwebtoken";
+import { cookies } from 'next/headers';
 
 export async function POST(_request: NextRequest): Promise<NextResponse<APIResponse>> {
 
@@ -9,6 +11,11 @@ export async function POST(_request: NextRequest): Promise<NextResponse<APIRespo
     const formData = await _request.formData();
     const name = formData.get("name") as string;
     const password = formData.get("password") as string;
+
+    //retrieve jwt secret for signing
+    const secret = process.env.JWT_SECRET as string;
+
+    const cookieStore = await cookies();
 
     //check validity
     const validFormData: boolean =
@@ -41,7 +48,21 @@ export async function POST(_request: NextRequest): Promise<NextResponse<APIRespo
             status: 200,
         });
 
-        else return NextResponse.json({
+        const { hash, ...safe } = target;
+
+        //write jwt to cookies
+        const token = sign({ ...safe }, secret, { expiresIn: "24h" });
+        cookieStore.set({
+            name: "token",
+            value: token,
+            httpOnly: true,
+            maxAge: (24 * 60 * 60),
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "lax",
+            priority: "high",
+        });
+
+        return NextResponse.json({
             success: true,
             data: null,
             message: "Success",
