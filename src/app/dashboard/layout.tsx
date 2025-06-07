@@ -13,15 +13,8 @@ import {
     SidebarProvider,
     SidebarTrigger,
 } from "@/components/ui/sidebar";
-import {
-    Breadcrumb,
-    BreadcrumbItem,
-    BreadcrumbLink,
-    BreadcrumbList,
-    BreadcrumbPage,
-    BreadcrumbSeparator
-
-} from "@/components/ui/breadcrumb";
+import getAuth from "@/functions/get-auth";
+import database from "@/lib/database";
 
 interface _props {
     children: React.ReactNode;
@@ -29,11 +22,19 @@ interface _props {
 
 export default async function layout({ children }: _props) {
 
+    const auth = await getAuth();
+    const { id } = auth!;
+
+    const data = await database.user.findUnique({
+        where: { id },
+        include: { workspace: true },
+    });
+
     return (
         <SidebarProvider>
             <Sidebar>
                 <SidebarHeader>
-                    header
+                    <i> Project Planner </i>
                 </SidebarHeader>
                 <SidebarMenu>
                     <SidebarMenuItem>
@@ -44,24 +45,8 @@ export default async function layout({ children }: _props) {
                 </SidebarMenu>
             </Sidebar>
             <SidebarInset>
-                <header className="flex py-4 shrink-0 items-center gap-2 border-b">
-                    <div className="flex items-center gap-2 px-3">
-                        <SidebarTrigger />
-                        <Separator orientation="vertical" className="mr-2 h-4" />
-                        <Breadcrumb>
-                            <BreadcrumbList>
-                                <BreadcrumbItem className="hidden md:block">
-                                    <BreadcrumbLink href="#">
-                                        Building Your Application
-                                    </BreadcrumbLink>
-                                </BreadcrumbItem>
-                                <BreadcrumbSeparator className="hidden md:block" />
-                                <BreadcrumbItem>
-                                    <BreadcrumbPage>Data Fetching</BreadcrumbPage>
-                                </BreadcrumbItem>
-                            </BreadcrumbList>
-                        </Breadcrumb>
-                    </div>
+                <header className="flex p-4 shrink-0 items-center gap-2 border-b">
+                    <h1> <b> {data?.workspace.name} </b> </h1>
                 </header>
                 <div className="flex flex-1 flex-col gap-4 p-4">
                     {children}
