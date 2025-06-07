@@ -10,7 +10,6 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
     SidebarProvider,
-    SidebarSeparator,
     SidebarTrigger,
 } from "@/components/ui/sidebar";
 import getAuth from "@/functions/get-auth";
@@ -18,6 +17,7 @@ import database from "@/lib/database";
 import Link from "next/link";
 import Image from "next/image";
 import { banner } from "../assets/assets";
+import auth from "@/interfaces/auth";
 
 interface _props {
     children: React.ReactNode;
@@ -25,8 +25,7 @@ interface _props {
 
 export default async function layout({ children }: _props) {
 
-    const auth = await getAuth();
-    const { id } = auth!;
+    const { id } = await getAuth() as auth;
 
     const data = await database.user.findUnique({
         where: { id },
@@ -61,7 +60,7 @@ export default async function layout({ children }: _props) {
                     <SidebarTrigger />
                     <h1> <b> {data?.workspace.name} </b> </h1>
                 </header>
-                <div className="flex flex-1 flex-col gap-4 p-4">
+                <div className="flex-1 gap-4 p-4 overflow-y-scroll">
                     {children}
                 </div>
             </SidebarInset>

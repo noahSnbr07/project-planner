@@ -18,7 +18,7 @@ export default async function page() {
     if (!data) return <></>;
 
     return (
-        <div className="flex gap-4 flex-col">
+        <div className="flex size-full gap-4 flex-col">
             <Greeting name={data.name || "[Error]"} />
             <Projects projects={data.workspace.projects} />
         </div>

@@ -16,6 +16,8 @@ import {
     FormMessage,
 } from "@/components/ui/form";
 
+import { ClipLoader } from "react-spinners";
+
 //typed api request/response cycle
 import APIResponse from "@/interfaces/api-response";
 
@@ -72,7 +74,7 @@ export default function AuthenticationForm() {
         <Form {...form}>
             <form
                 onSubmit={form.handleSubmit(onSubmit)}
-                className="bg-card-foreground flex flex-col gap-4 p-4 rounded-lg">
+                className="border-2 flex flex-col gap-4 p-4 rounded-lg">
                 <FormField
                     control={form.control}
                     name="name"
@@ -101,7 +103,9 @@ export default function AuthenticationForm() {
                         </FormItem>
                     )}
                 />
-                <Button type="submit"> Login </Button>
+                <Button variant={"default"} type="submit">
+                    {pending ? <ClipLoader size={16} /> : "Submit"}
+                </Button>
             </form>
         </Form>
     )
