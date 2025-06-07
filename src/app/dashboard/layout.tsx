@@ -2,7 +2,6 @@
 
 import React from "react";
 
-import { Separator } from "@/components/ui/separator";
 import {
     Sidebar,
     SidebarHeader,
@@ -11,10 +10,13 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
     SidebarProvider,
-    SidebarTrigger,
+    SidebarSeparator,
 } from "@/components/ui/sidebar";
 import getAuth from "@/functions/get-auth";
 import database from "@/lib/database";
+import Link from "next/link";
+import Image from "next/image";
+import { banner } from "../assets/assets";
 
 interface _props {
     children: React.ReactNode;
@@ -33,8 +35,17 @@ export default async function layout({ children }: _props) {
     return (
         <SidebarProvider>
             <Sidebar>
-                <SidebarHeader>
-                    <i> Project Planner </i>
+                <SidebarHeader className="p-4">
+                    <Link
+                        href={"/dashboard"}>
+                        <Image
+                            alt="Banner"
+                            title="Project Planner"
+                            height={24}
+                            className="opacity-50"
+                            src={banner}
+                        />
+                    </Link>
                 </SidebarHeader>
                 <SidebarMenu>
                     <SidebarMenuItem>
