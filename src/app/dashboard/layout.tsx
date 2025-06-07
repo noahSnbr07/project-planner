@@ -11,6 +11,7 @@ import {
     SidebarMenuItem,
     SidebarProvider,
     SidebarSeparator,
+    SidebarTrigger,
 } from "@/components/ui/sidebar";
 import getAuth from "@/functions/get-auth";
 import database from "@/lib/database";
@@ -56,7 +57,8 @@ export default async function layout({ children }: _props) {
                 </SidebarMenu>
             </Sidebar>
             <SidebarInset>
-                <header className="flex p-4 shrink-0 items-center gap-2 border-b">
+                <header className="flex p-4 shrink-0 items-center gap-4 border-b">
+                    <SidebarTrigger />
                     <h1> <b> {data?.workspace.name} </b> </h1>
                 </header>
                 <div className="flex flex-1 flex-col gap-4 p-4">
